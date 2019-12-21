@@ -133,9 +133,6 @@ sysreboot() {
     warning "Some changes made to your system require"
     warning "your computer to reboot to take effect."
     newline
-    if prompt "Would you like to reboot now?"; then
-        sync && sudo reboot
-    fi
 }
 
 arch_check() {
@@ -466,15 +463,6 @@ EOL
 	ASK_TO_REBOOT=true
     fi
 
-    if [ $bcm2835off == "yes" ]; then
-        newline
-        echo "We can now test your $productname"
-        warning "Set your speakers at a low volume if possible!"
-        if confirm "Do you wish to test your system now?"; then
-            echo "Testing..."
-            speaker-test -l5 -c2 -t wav
-        fi
-    fi
     newline
     success "All done!"
     newline
