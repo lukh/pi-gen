@@ -5,7 +5,8 @@ pip3 install mopidy-transistor
 EOF
 
 
-install -m 644 -d "${ROOTFS_DIR}/var/local/mopidy/noise_folder"
+install -m 750 -d "${ROOTFS_DIR}/var/lib/mopidy/transistor/noise_folder"
 
-install -m 644 -d "${ROOTFS_DIR}/etc/mopidy/"
-install -m 644 files/mopidy.conf "${ROOTFS_DIR}/etc/mopidy/mopidy.conf"
+on_chroot << EOF
+chown mopidy:audio /var/lib/mopidy/transistor/noise_folder
+EOF
