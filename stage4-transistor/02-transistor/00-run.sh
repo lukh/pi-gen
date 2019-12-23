@@ -1,9 +1,14 @@
 #!/bin/bash -e
 
-on_chroot << EOF
-pip3 install mopidy-transistor
-EOF
+#on_chroot << EOF
+#pip3 install mopidy-transistor
+#EOF
 
+on_chroot << EOF
+wget -P /tmp/ https://github.com/lukh/mopidy-transistor/archive/develop.zip
+pip3 install /tmp/develop.zip
+rm /tmp/develop.zip
+EOF
 
 install -m 750 -d "${ROOTFS_DIR}/var/lib/mopidy/transistor/noise_folder"
 
