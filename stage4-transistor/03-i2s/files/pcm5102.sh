@@ -110,23 +110,23 @@ sudocheck() {
 }
 
 sysclean() {
-    sudo apt-get clean && sudo apt-get autoclean
-    sudo apt-get -y autoremove &> /dev/null
+    apt-get clean && apt-get autoclean
+    apt-get -y autoremove &> /dev/null
 }
 
 sysupdate() {
     if ! $UPDATE_DB; then
         echo "Updating apt indexes..." && progress 3 &
-        sudo apt-get update 1> /dev/null || { warning "Apt failed to update indexes!" && exit 1; }
+        apt-get update 1> /dev/null || { warning "Apt failed to update indexes!" && exit 1; }
         echo "Reading package lists..."
         progress 3 && UPDATE_DB=true
     fi
 }
 
 sysupgrade() {
-    sudo apt-get upgrade
-    sudo apt-get clean && sudo apt-get autoclean
-    sudo apt-get -y autoremove &> /dev/null
+    apt-get upgrade
+    apt-get clean && apt-get autoclean
+    apt-get -y autoremove &> /dev/null
 }
 
 sysreboot() {
@@ -341,14 +341,14 @@ if confirm "Do you wish to continue?"; then
         if [ -e $CONFIG ] && grep -q "^dtoverlay=hifiberry-dac$" $CONFIG; then
             echo "dtoverlay already active"
         else
-            echo "dtoverlay=hifiberry-dac" | sudo tee -a $CONFIG
+            echo "dtoverlay=hifiberry-dac" | tee -a $CONFIG
             ASK_TO_REBOOT=true
         fi
 
         if [ -e $CONFIG ] && grep -q "^dtoverlay=i2s-mmap$" $CONFIG; then
             echo "i2s mmap dtoverlay already active"
         else
-            echo "dtoverlay=i2s-mmap" | sudo tee -a $CONFIG
+            echo "dtoverlay=i2s-mmap" | tee -a $CONFIG
             ASK_TO_REBOOT=true
         fi
 
@@ -356,7 +356,7 @@ if confirm "Do you wish to continue?"; then
             newline
             echo "Commenting out Blacklist entry in "
             echo "$BLACKLIST"
-            sudo sed -i -e "s|^blacklist[[:space:]]*i2c-bcm2708.*|#blacklist i2c-bcm2708|" \
+            sed -i -e "s|^blacklist[[:space:]]*i2c-bcm2708.*|#blacklist i2c-bcm2708|" \
                         -e "s|^blacklist[[:space:]]*snd-soc-pcm512x.*|#blacklist snd-soc-pcm512x|" \
                         -e "s|^blacklist[[:space:]]*snd-soc-wm8804.*|#blacklist snd-soc-wm8804|" $BLACKLIST &> /dev/null
         fi
@@ -371,16 +371,16 @@ if confirm "Do you wish to continue?"; then
         bcm2835off="no"
         newline
         echo "Disabling default sound driver"
-        sudo sed -i "s|^dtparam=audio=on$|#dtparam=audio=on|" $CONFIG &> /dev/null
+        sed -i "s|^dtparam=audio=on$|#dtparam=audio=on|" $CONFIG &> /dev/null
         if [ -e $LOADMOD ] && grep -q "^snd-bcm2835" $LOADMOD; then
-            sudo sed -i "s|^snd-bcm2835|#snd-bcm2835|" $LOADMOD &> /dev/null
+            sed -i "s|^snd-bcm2835|#snd-bcm2835|" $LOADMOD &> /dev/null
         fi
         ASK_TO_REBOOT=true
     elif [ -e $LOADMOD ] && grep -q "^snd-bcm2835" $LOADMOD; then
         bcm2835off="no"
         newline
         echo "Disabling default sound module"
-        sudo sed -i "s|^snd-bcm2835|#snd-bcm2835|" $LOADMOD &> /dev/null
+        sed -i "s|^snd-bcm2835|#snd-bcm2835|" $LOADMOD &> /dev/null
         ASK_TO_REBOOT=true
     else
         newline
@@ -391,9 +391,9 @@ if confirm "Do you wish to continue?"; then
     echo "Configuring sound output"
     if [ -e /etc/asound.conf ]; then
         if [ -e /etc/asound.conf.old ]; then
-            sudo rm -f /etc/asound.conf.old
+            rm -f /etc/asound.conf.old
         fi
-        sudo mv /etc/asound.conf /etc/asound.conf.old
+        mv /etc/asound.conf /etc/asound.conf.old
     fi
     cat > ~/asound.conf << 'EOL'
 pcm.speakerbonnet {
@@ -435,11 +435,11 @@ pcm.!default {
 }
 EOL
 
-    sudo mv ~/asound.conf /etc/asound.conf
+    mv ~/asound.conf /etc/asound.conf
 
     newline
     echo "Installing aplay systemd unit"
-    sudo sh -c 'cat > /etc/systemd/system/aplay.service' << 'EOL'
+    sh -c 'cat > /etc/systemd/system/aplay.service' << 'EOL'
 [Unit]
 Description=Invoke aplay from /dev/zero at system start.
 
@@ -450,8 +450,8 @@ ExecStart=/usr/bin/aplay -D default -t raw -r 44100 -c 2 -f S16_LE /dev/zero
 WantedBy=multi-user.target
 EOL
 
-    sudo systemctl daemon-reload
-    sudo systemctl disable aplay
+    systemctl daemon-reload
+    systemctl disable aplay
     newline
     echo "You can optionally activate '/dev/zero' playback in"
     echo "the background at boot. This will remove all"
@@ -459,7 +459,7 @@ EOL
     newline
     if confirm "Activate '/dev/zero' playback in background? [RECOMMENDED]"; then
 	newline
-	sudo systemctl enable aplay
+	systemctl enable aplay
 	ASK_TO_REBOOT=true
     fi
 
