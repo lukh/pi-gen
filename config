@@ -2,3 +2,4 @@ IMG_NAME='Transistor'
 HOSTNAME='transistor'
 FIRST_USER_NAME='transistor'
 ENABLE_SSH=1
+YAWAP_COUNTRY=FR
