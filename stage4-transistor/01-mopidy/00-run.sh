@@ -1,10 +1,7 @@
 #!/bin/bash -e
 
-# will be replaced by a apt-get install mopidy in the future
 on_chroot << EOF
-wget -P /tmp/ https://github.com/mopidy/mopidy/archive/v3.0.0a6.zip
-pip3 install /tmp/v3.0.0a6.zip
-rm /tmp/v3.0.0a6.zip
+pip3 install mopidy
 EOF
 
 on_chroot << EOF
