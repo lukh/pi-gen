@@ -15,7 +15,7 @@ usermod -aG dialout mopidy
 EOF
 
 # noises
-install -m 644 files/* "${ROOTFS_DIR}/var/lib/mopidy/transistor/noise_folder"
+install -m 644 files/noise/* "${ROOTFS_DIR}/var/lib/mopidy/transistor/noise_folder"
 
 on_chroot << EOF
 chown mopidy:audio /var/lib/mopidy/transistor/noise_folder/*
